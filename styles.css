@@ -1,0 +1,29 @@
+body {
+
+}
+
+.book {
+    background-color: pink;
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+p:first-child {
+    font-size: 30px;
+}
+
+.library {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+button {
+    width: 100px;
+    margin: 0 100px ;
+    font-size: 20px;
+    background-color: plum;
+}
