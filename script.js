@@ -1,84 +1,94 @@
-const myLibrary = [];
 
-function Book(title, author, pages, read) {
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.read = read;
-    this.info = function() {
-        return(`${title} by ${author}, ${pages} pages, ${read}` );
+
+
+class Book {
+    constructor(title, author, pages, read) {
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.read = read;
     }
 
-}
+    info() {
+        return(`${this.title} by ${this.author}, ${this.pages} pages, ${this.read}` );
+    }
 
-Book.prototype.toggleRead = function() {
-    this.read = (this.read === "read") ? "not read" : "read";
-    
-}
-
-function addBookToLibrary(book) {
-    myLibrary.push(book)
-}
-
-
-
-function displayBooks() {
-    let library = document.getElementsByClassName("library")[0];
-    library.innerHTML = "";
-
-    
-    for (let i =0; i < myLibrary.length; i++) {
-        let bookItem = document.createElement("li");
-        bookItem.classList.add("book");
-
-        let title = document.createElement("p");
-        let author = document.createElement("p");
-        let pages = document.createElement("p");
-        let read = document.createElement("button");
-        let deleteBtn = document.createElement("button");
-
-        title.textContent = myLibrary[i].title;
-        author.textContent = `Author: ${myLibrary[i].author}`;
-        pages.textContent = `Pages: ${myLibrary[i].pages}`;
-        read.textContent = `${myLibrary[i].read}`;
-
-        deleteBtn.textContent = "Remove";
-        deleteBtn.classList.add("deleteBtn")
-        deleteBtn.setAttribute("data-index", i);
-
-
-
-        library.appendChild(bookItem);
-        bookItem.appendChild(title);
-        bookItem.appendChild(author);
-        bookItem.appendChild(pages);
-        bookItem.appendChild(read);
-        bookItem.appendChild(deleteBtn);
- 
-        ///remove book
-
-        deleteBtn.addEventListener("click", (event) => {
-            const index = event.target.getAttribute("data-index");
-            removeBook(index);
-        });
-
-        let book = myLibrary[i];
-
-        read.addEventListener("click", (event) => {
-            book.toggleRead();
-            read.textContent = book.read;
-
-        } )
+    toggleRead() {
+        this.read = (this.read === "read") ? "not read" : "read";
     }
 }
 
-const book1 = new Book("poo", "pooman", 12, "not read");
-addBookToLibrary(book1);
-const book2 = new Book("booklolz", "authorlolz", 20, "read");
-addBookToLibrary(book2);
-const book3 = new Book("bog book of lies", "bog", 100, "read");
-addBookToLibrary(book3);
-displayBooks();
+
+
+class Library {
+    constructor() {
+        this.myLibrary = [];
+    }
+
+    addBook(book) {
+        this.myLibrary.push(book);
+    }
+
+    removeBook(index) {
+        this.myLibrary.splice(index, 1);
+        this.displayBooks();
+
+    }
+
+    displayBooks() {
+        const library = document.getElementsByClassName("library")[0];
+        library.innerHTML = "";
+
+        this.myLibrary.forEach((book, index) => {
+            let bookItem = document.createElement("li");
+            bookItem.classList.add("book");
+
+            let title = document.createElement("p");
+            let author = document.createElement("p");
+            let pages = document.createElement("p");
+            let read = document.createElement("button");
+            let deleteBtn = document.createElement("button");
+
+            title.textContent = book.title;
+            author.textContent = `Author: ${book.author}`;
+            pages.textContent = `Pages: ${book.pages}`;
+            read.textContent = `${book.read}`;
+
+            deleteBtn.textContent = "Remove";
+            deleteBtn.classList.add("deleteBtn")
+            deleteBtn.setAttribute("data-index", index);
+
+
+
+            library.appendChild(bookItem);
+            bookItem.appendChild(title);
+            bookItem.appendChild(author);
+            bookItem.appendChild(pages);
+            bookItem.appendChild(read);
+            bookItem.appendChild(deleteBtn);
+
+            deleteBtn.addEventListener("click", () => {
+                this.removeBook(index);
+            });
+
+            read.addEventListener("click", () => {
+                book.toggleRead();
+                read.textContent = book.read;
+            })
+        })
+    }
+}
+
+
+//instantiate library
+const library = new Library();
+
+library.addBook(new Book("myBook", "an author", 12, "not read"));
+library.addBook(new Book("booklolz", "authorlolz", 20, "read"));
+library.addBook(new Book("terrible book", "bog", 100, "read"));
+
+
+library.displayBooks();
 
 
 ////add book dialog
@@ -106,8 +116,8 @@ confirmBtn.addEventListener("click", (event) => {
     const newRead = document.getElementById("read").value; 
 
     const newBook = new Book(newTitle, newAuthor, newPages, newRead);
-    addBookToLibrary(newBook);
-    displayBooks();
+    library.addBook(newBook);
+    library.displayBooks();
 
     addDialog.close();
 
@@ -118,10 +128,4 @@ cancelBtn.addEventListener("click", () => {
 })
 
 
-
-
-const removeBook = function (index) {
-    myLibrary.splice(index, 1);
-    displayBooks();
-
-}
+///mine
